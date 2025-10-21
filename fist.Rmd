@@ -2,4 +2,8 @@
 library(rvest)
 
 ```
+```{r}
+install.packages("polite")
+
+```
 
