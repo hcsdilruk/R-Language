@@ -1,9 +1,30 @@
 ```{r}
-library(rvest)
+library(readxl)
+library(dplyr)
+```
+
+```{r}
+
+file_path <- "C:/Users/Welcome/Downloads/who_ambient_air_quality_database_version_2024_(v6.1) (2).xlsx"
+
+```
+
+```{r}
+air_quality_data <- read_excel(file_path)
+
+```
+
+```{r}
+head(air_quality_data)
 
 ```
 ```{r}
-install.packages("polite")
+str(air_quality_data)
+
+```
+
+```{r}
+excel_sheets(file_path)
 
 ```
 
