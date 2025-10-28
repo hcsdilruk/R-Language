@@ -10,21 +10,72 @@ file_path <- "C:/Users/Welcome/Downloads/who_ambient_air_quality_database_versio
 ```
 
 ```{r}
-air_quality_data <- read_excel(file_path)
-
-```
-
-```{r}
-head(air_quality_data)
-
-```
-```{r}
-str(air_quality_data)
-
-```
-
-```{r}
 excel_sheets(file_path)
+
+```
+
+```{r}
+sheet1_data <- read_excel(file_path, sheet = 1)
+
+
+```
+```{r}
+head(sheet1_data)
+
+```
+
+```{r}
+str(sheet1_data)
+```
+```{r}
+summary(sheet1_data)
+
+```
+```{r}
+sheet2_data <- read_excel(file_path, sheet = 2)
+
+
+```
+
+```{r}
+head(sheet2_data)
+```
+```{r}
+str(sheet2_data)
+```
+
+```{r}
+summary(sheet2_data)
+
+```
+```{r}
+sheet3_data <- read_excel(file_path, sheet = 3)
+
+
+```
+```{r}
+head(sheet3_data)
+
+
+```
+```{r}
+str(sheet3_data)
+
+```
+```{r}
+summary(sheet3_data)
+
+
+```
+
+
+```{r}
+names(sheet3_data)
+
+```
+
+```{r}
+colSums(is.na(sheet3_data))
 
 ```
 
