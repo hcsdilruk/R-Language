@@ -39,5 +39,133 @@ str(data)
 
 ```
 
+```{r}
+clean_median <- data
+```
 
+```{r}
+pm25_median <- median(clean_median$PM2.5, na.rm = TRUE)
+pm10_median <- median(clean_median$PM10, na.rm = TRUE)
+```
+
+```{r}
+sum(is.na(data$pm25_concentration))
+```
+
+```{r}
+sum(is.na(data$pm10_concentration))
+
+```
+```{r}
+pm25_stats <- summary(data$pm25_concentration)
+pm10_stats <- summary(data$pm10_concentration)
+
+pm25_stats
+
+```
+```{r}
+pm10_stats
+
+```
+```{r}
+pm25_mean <- mean(data$pm25_concentration, na.rm = TRUE)
+pm10_mean <- mean(data$pm10_concentration, na.rm = TRUE)
+```
+
+```{r}
+clean_data <- data %>%
+  mutate(
+    pm25_concentration = ifelse(is.na(pm25_concentration), pm25_mean, pm25_concentration),
+    pm10_concentration = ifelse(is.na(pm10_concentration), pm10_mean, pm10_concentration)
+  )
+```
+
+```{r}
+sum(is.na(clean_data$pm25_concentration))
+sum(is.na(clean_data$pm10_concentration))
+```
+```{r}
+correlation <- cor(clean_data$pm25_concentration, clean_data$pm10_concentration)
+round(correlation, 3)
+```
+```{r}
+cor_test <- cor.test(clean_data$pm25_concentration, clean_data$pm10_concentration)
+cor_test
+```
+
+```{r}
+model <- lm(pm25_concentration ~ pm10_concentration, data = clean_data)
+model
+```
+
+```{r}
+r_squared <- summary(model)$r.squared
+slope <- coef(model)[2]
+intercept <- coef(model)[1]
+
+round(r_squared, 3)
+
+```
+```{r}
+print(paste("Regression equation: PM2.5 =", round(intercept, 3), "+", round(slope, 3), "* PM10"))
+
+```
+
+```{r}
+p1 <- ggplot(clean_data, aes(x = pm10_concentration, y = pm25_concentration)) +
+  geom_point(alpha = 0.3, color = "blue", size = 1) +
+  geom_smooth(method = "lm", color = "red", se = TRUE) +
+  labs(
+    title = "Relationship between PM2.5 and PM10 Concentrations",
+    subtitle = paste("Correlation:", round(correlation, 3), "| R-squared:", round(r_squared, 3)),
+    x = "PM10 Concentration (μg/m³)",
+    y = "PM2.5 Concentration (μg/m³)"
+  ) +
+  theme_minimal()
+
+print(p1)
+```
+```{r}
+p2 <- ggplot(clean_data) +
+  geom_density(aes(x = pm25_concentration), fill = "blue", alpha = 0.5) +
+  geom_density(aes(x = pm10_concentration), fill = "red", alpha = 0.5) +
+  labs(
+    title = "Distribution of PM2.5 and PM10 Concentrations",
+    x = "Concentration (μg/m³)",
+    y = "Density"
+  ) +
+  theme_minimal()
+
+print(p2)
+```
+
+```{r}
+
+new_pm10 <- data.frame(pm10_concentration = c(20, 50, 100, 150, 200))
+predictions <- predict(model, newdata = new_pm10)
+
+prediction_df <- data.frame(
+  PM10_Input = new_pm10$pm10_concentration,
+  Predicted_PM25 = round(predictions, 2)
+)
+
+print("Prediction examples:")
+prediction_df
+
+```
+
+```{r}
+print(" CONCLUSIONS ")
+
+strength <- ifelse(correlation > 0.7, "strong positive",
+  ifelse(correlation > 0.4, "moderate positive",
+    ifelse(correlation > 0.2, "weak positive", "very weak or no")
+  )
+)
+
+print(paste("CONCLUSION: There is a", strength, "relationship between PM2.5 and PM10."))
+print(paste("Correlation coefficient (r):", round(correlation, 3)))
+print(paste("R-squared:", round(r_squared, 3), "meaning that", round(r_squared * 100, 1), "% of PM2.5 variation can be explained by PM10."))
+print(paste("Statistical significance: p-value =", format.pval(cor_test$p.value, digits = 3)))
+```
 
