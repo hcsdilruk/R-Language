@@ -110,6 +110,20 @@ round(r_squared, 3)
 print(paste("Regression equation: PM2.5 =", round(intercept, 3), "+", round(slope, 3), "* PM10"))
 
 ```
+```{r}
+p1 <- ggplot(clean_data, aes(x = pm10_concentration, y = pm25_concentration)) +
+  geom_point(alpha = 0.3, color = "blue", size = 1) +
+  
+  labs(
+    title = "Relationship between PM2.5 and PM10 Concentrations",
+    subtitle = paste("Correlation:", round(correlation, 3), "| R-squared:", round(r_squared, 3)),
+    x = "PM10 Concentration (μg/m³)",
+    y = "PM2.5 Concentration (μg/m³)"
+  ) +
+  theme_minimal()
+
+print(p1)
+```
 
 ```{r}
 p1 <- ggplot(clean_data, aes(x = pm10_concentration, y = pm25_concentration)) +
@@ -154,18 +168,5 @@ prediction_df
 
 ```
 
-```{r}
-print(" CONCLUSIONS ")
 
-strength <- ifelse(correlation > 0.7, "strong positive",
-  ifelse(correlation > 0.4, "moderate positive",
-    ifelse(correlation > 0.2, "weak positive", "very weak or no")
-  )
-)
-
-print(paste("CONCLUSION: There is a", strength, "relationship between PM2.5 and PM10."))
-print(paste("Correlation coefficient (r):", round(correlation, 3)))
-print(paste("R-squared:", round(r_squared, 3), "meaning that", round(r_squared * 100, 1), "% of PM2.5 variation can be explained by PM10."))
-print(paste("Statistical significance: p-value =", format.pval(cor_test$p.value, digits = 3)))
-```
 
